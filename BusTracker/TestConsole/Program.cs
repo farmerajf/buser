@@ -20,16 +20,19 @@ namespace BusTracker
 
                 var tracker = new Buser();
 
-                foreach (var stop in route)
+                for (var stop = 0; stop < route.Count; stop++)
                 {
-                    Console.WriteLine("Stop: " + stop);
+                    Console.WriteLine("|");
+                    Console.WriteLine("|");
+                    Console.WriteLine("|");
+                    Console.WriteLine("Stop: " + route[stop]);
 
-                    var arrivals = tracker.GetBuses(stop);
-                    foreach (var arrival in arrivals)
-                    {
-                        Console.WriteLine("{0} | {1}mins", arrival.Code, arrival.MinutesToArrival);
-                    }
-                    Console.WriteLine();
+                    //var arrivals = tracker.GetBuses(route[stop]);
+                    //foreach (var arrival in arrivals)
+                    //{
+                    //    Console.WriteLine("{0} | {1}mins", arrival.Code, arrival.MinutesToArrival);
+                    //}
+                    //Console.WriteLine();
                 }
 
                 Console.ReadLine();
