@@ -8,14 +8,13 @@ namespace BusTracker
 {
     public class Buser
     {
-        //0170SGB20003
         private const string baseUrl = "http://travelwest.acisconnect.com/Popup_Content/WebDisplay/WebDisplay.aspx?stopRef=";
 
-        public IEnumerable<Bus> GetBuses(string stopReference)
+        public List<Bus> GetBuses(string stopReference)
         {
             var html = GetHtml(stopReference);
             var serviceRows = GetServiceRows(html);
-            var serviceItems = serviceRows.Select(MapToModel);
+            var serviceItems = serviceRows.Select(MapToModel).ToList();
 
             return serviceItems;
         }
@@ -56,7 +55,11 @@ namespace BusTracker
                 Code = serviceNumber,
                 HasMinutesToArrival = IsEstimate(serviceTime)
             };
-            if (IsEstimate(serviceTime))
+            if (IsDue(serviceTime))
+            {
+                model.MinutesToArrival = 0;
+                model.ArrivateTime = DateTime.Now;
+            } else if (IsEstimate(serviceTime))
             {
                 model.MinutesToArrival = int.Parse(serviceTime.Substring(0, serviceTime.Length - 5));
                 model.ArrivateTime = DateTime.Now.AddMinutes(model.MinutesToArrival);
@@ -67,6 +70,11 @@ namespace BusTracker
             }
              
             return model;
+        }
+
+        private bool IsDue(string serviceTime)
+        {
+            return serviceTime.EndsWith("Due");
         }
 
         private bool IsEstimate(string serviceTime)
